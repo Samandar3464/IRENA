@@ -1,15 +1,11 @@
 package com.example.irena.controller;
 
+import com.example.irena.entity.UserEntity;
+import com.example.irena.model.UserRegisterDTO;
+import com.example.irena.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import uz.pdp.spring_boot_security_web.entity.UserEntity;
-import uz.pdp.spring_boot_security_web.model.dto.receive.UserRegisterDTO;
-import uz.pdp.spring_boot_security_web.service.UserService;
-
-import java.io.IOException;
 
 @Controller
 @RequestMapping("/api/user")
@@ -34,16 +30,5 @@ public class UserController {
             return "redirect:/";
         }
         return "redirect:/register";
-    }
-    @GetMapping("/editPhoto")
-    public String savePage(){
-        return "cabinet";
-    }
-    @PostMapping("/save")
-    public String savePhoto(@RequestParam("file")MultipartFile file) throws IOException {
-        UserEntity userEntity= (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        userService.editUserEntity(userEntity.getId(),file );
-
-        return "redirect:/";
     }
 }
