@@ -1,4 +1,4 @@
-package com.example.irena.model;
+package com.example.irena.model.request;
 
 
 
@@ -8,12 +8,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class NewsRegisterDto {
     private String tittle;
+    private LocalDateTime happenDate;
     private MultipartFile titlePhoto;
     private MultipartFile bodyPhoto;
     private String newsBody;

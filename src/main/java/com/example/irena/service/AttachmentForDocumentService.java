@@ -1,9 +1,7 @@
 package com.example.irena.service;
+
 import com.example.irena.entity.AttachmentEntity;
-import com.example.irena.exception.attach.CouldNotRead;
-import com.example.irena.exception.attach.FileUploadException;
-import com.example.irena.exception.attach.OriginalFileNameNullException;
-import com.example.irena.exception.attach.SomethingWentWrong;
+import com.example.irena.exception.attach.*;
 import com.example.irena.model.attach.AttachmentDownloadDTO;
 import com.example.irena.model.attach.AttachmentResponseDTO;
 import com.example.irena.repository.AttachmentRepository;
@@ -34,18 +32,17 @@ public class AttachmentForDocumentService {
     private final AttachmentRepository repository;
 
 
-    private String attachUploadFolder="D:/KODLAR/Irena/src/main/resources/static/document/";
+    private String attachUploadFolder = "D:/KODLAR/Irena/src/main/resources/static/document/";
 
     @Value("${attach.download.url}")
     private String attachDownloadUrl;
 
 
-//    public String getYearMonthDay() {
-//        int year = Calendar.getInstance().get(Calendar.YEAR);
-//        int month = Calendar.getInstance().get(Calendar.MONTH);
-//        int day = Calendar.getInstance().get(Calendar.DATE);
-//        return year + "/" + month + "/" + day; // 2022/03/23
-//    }
+    public String getYearMonthDay() {
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        return year + "/" + month; // 2022/03
+    }
 
 
     public String getExtension(String fileName) {
@@ -60,14 +57,18 @@ public class AttachmentForDocumentService {
     public AttachmentEntity saveToSystem(MultipartFile file) {
         try {
             System.out.println(file.getContentType());
-            File folder = new File(attachUploadFolder );
+            String pathFolder = getYearMonthDay();
+            File folder = new File(attachUploadFolder + pathFolder);
             if (!folder.exists()) folder.mkdirs();
             String fileName = UUID.randomUUID().toString(); // dasdasd-dasdasda-asdasda-asdasd
-            String extension = getExtension(file.getOriginalFilename()); //zari.jpg
-
+            String extension = getExtension(file.getOriginalFilename()); //book.pdf
+            if (!extension.equals("pdf")
+            ) {
+                throw new FileTypeIncorrectException("File type must be pdf");
+            }
             // attaches/2022/04/23/dasdasd-dasdasda-asdasda-asdasd.jpg
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(attachUploadFolder +  "/" + fileName + "." + extension);
+            Path path = Paths.get(attachUploadFolder + "/" + fileName + "." + extension);
             File f = Files.write(path, bytes).toFile();
 
             AttachmentEntity entity = new AttachmentEntity();
@@ -77,17 +78,10 @@ public class AttachmentForDocumentService {
             entity.setPath(attachUploadFolder);
             entity.setSize(file.getSize());
             entity.setContentType(file.getContentType());
-                MultimediaObject instance = new MultimediaObject(f);
-                MultimediaInfo result = instance.getInfo();
-                entity.setDuration((double) (result.getDuration() / 1000));
-
-        return   repository.save(entity);
+            return repository.save(entity);
         } catch (IOException e) {
             throw new FileUploadException("File could not upload");
-        } catch (EncoderException e) {
-            throw new RuntimeException(e);
         }
-
     }
 
     private AttachmentEntity getAttachment(String fileName) throws FileNotFoundException {
@@ -98,6 +92,7 @@ public class AttachmentForDocumentService {
         }
         return optional.get();
     }
+
     public byte[] open(String fileName) {
         try {
             AttachmentEntity entity = getAttachment(fileName);
@@ -110,6 +105,7 @@ public class AttachmentForDocumentService {
         }
 
     }
+
     public AttachmentDownloadDTO download(String fileName) {
         try {
             AttachmentEntity entity = getAttachment(fileName);

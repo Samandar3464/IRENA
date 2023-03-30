@@ -2,6 +2,7 @@ package com.example.irena.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,6 +16,8 @@ public class NewsEntity {
     private Long id;
     private String title;
     private String newsBody;
+    private LocalDateTime happenDate;
+    private boolean active=true;
     @OneToOne
     private AttachmentEntity titlePhoto;
     @OneToOne

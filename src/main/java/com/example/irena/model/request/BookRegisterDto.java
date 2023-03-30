@@ -1,4 +1,4 @@
-package com.example.irena.model;
+package com.example.irena.model.request;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;

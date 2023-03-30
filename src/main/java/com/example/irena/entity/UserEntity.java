@@ -1,7 +1,7 @@
 package com.example.irena.entity;
 
 import com.example.irena.entity.Enum.RoleEnum;
-import com.example.irena.model.UserRegisterDTO;
+import com.example.irena.model.request.UserRegisterDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -72,10 +71,9 @@ public class UserEntity implements UserDetails {
     }
 
     public static UserEntity of(UserRegisterDTO userRegisterDTO) {
-        List<RoleEnum>roles = List.of(RoleEnum.USER);
         return UserEntity.builder()
                 .email(userRegisterDTO.getEmail())
-                .roles(roles)
+                .roles(List.of(RoleEnum.valueOf(userRegisterDTO.getRole())))
                 .isEnabled(false)
                 .build();
     }

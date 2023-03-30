@@ -1,4 +1,4 @@
-package com.example.irena.model;
+package com.example.irena.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@JsonIgnoreProperties(ignoreUnknown = true)
-public class UserRegisterDTO {
+public class UserLoginDTO {
     private String email;
     private String password;
 }

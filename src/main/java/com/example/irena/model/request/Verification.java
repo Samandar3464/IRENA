@@ -1,4 +1,4 @@
-package com.example.irena.model;
+package com.example.irena.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +10,4 @@ import lombok.NoArgsConstructor;
 public class Verification {
     private String email;
     private int code;
-
-    public Verification(String phoneNumber) {
-        this.email = email;
-    }
 }

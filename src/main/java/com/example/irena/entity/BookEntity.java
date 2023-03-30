@@ -16,6 +16,7 @@ public class BookEntity {
     private String ISBN;
     private String title;
     private String description;
+    private boolean active=true;
     @OneToOne
     private AttachmentEntity bookPhoto;
     @OneToOne

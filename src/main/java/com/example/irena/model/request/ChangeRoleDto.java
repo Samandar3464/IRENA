@@ -1,4 +1,4 @@
-package com.example.irena.model;
+package com.example.irena.model.request;
 
 import com.example.irena.entity.Enum.RoleEnum;
 import lombok.AllArgsConstructor;
