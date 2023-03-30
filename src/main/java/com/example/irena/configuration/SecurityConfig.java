@@ -28,38 +28,33 @@ import java.util.Properties;
 public class SecurityConfig {
 
     private final AuthService authService;
-    //User krishi mumkin bolgan yollar
-    private static final String[] USER_CAN_ENTER = new String[]{
-            "/**"
-            , "/login"
-            , "/register"
-            , "/api/user/verify/**"
-            , "/subject/**"
-            , "/question"
-    };
-    private static final String[] USER_CAN_ENTER_POST = new String[]{
-            "/api/user/add"
-    };
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
+    private final String[] USER_CAN_ENTER_GET =
+            new String[]{
+                    "/**"
+            };
+    private final String[] USER_CAN_ENTER_POST =
+            new String[]{
+                    "/**"
+            };
+    private final String[] USER_CAN_ENTER_PUT =
+            new String[]{
+                    "/**"
+            };
+    private final String[] USER_CAN_ENTER_DELETE =
+            new String[]{
+                    "/**"
+            };
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.GET, USER_CAN_ENTER_GET).permitAll()
                 .requestMatchers(HttpMethod.POST, USER_CAN_ENTER_POST).permitAll()
-                .requestMatchers(HttpMethod.GET, USER_CAN_ENTER).permitAll()
+                .requestMatchers(HttpMethod.PUT, USER_CAN_ENTER_PUT).permitAll()
+                .requestMatchers(HttpMethod.DELETE, USER_CAN_ENTER_DELETE).permitAll()
                 .anyRequest()
                 .authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/",true)
                 .and()
                 .logout()
                 .logoutUrl("/logout")
@@ -67,6 +62,11 @@ public class SecurityConfig {
                 .deleteCookies("JSESSIONID");
 
         return http.build();
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -78,13 +78,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder =
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManager =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(authenticationProvider());
-        return authenticationManagerBuilder.build();
+        authenticationManager.authenticationProvider(authenticationProvider());
+        return authenticationManager.build();
     }
-
     @Bean
     @Qualifier("javasampleapproachMailSender")
     public JavaMailSender javaMailSender() {

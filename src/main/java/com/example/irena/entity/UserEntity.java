@@ -8,6 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,8 +27,9 @@ public class UserEntity implements UserDetails {
     protected int id;
     private String email;
     private String password;
-    private String code;
+    private int code;
     private List<RoleEnum> roles;
+    private LocalDate createdDate;
     private boolean isEnabled = false;
 
     @Override
